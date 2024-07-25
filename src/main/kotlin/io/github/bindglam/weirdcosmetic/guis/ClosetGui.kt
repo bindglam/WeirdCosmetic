@@ -26,6 +26,7 @@ class ClosetGui(private val page: Int) : InventoryHolder, Listener {
         inv.setItem(9*5+4, ItemBuilder(Material.BARRIER).setItemName("<red><bold>뒤로").build())
 
         for(i in 9*5*page..<9*5*(page+1)){
+            if(ClosetManager.cosmetics.size <= i) break
             val cosmetic = ClosetManager.cosmetics.values.stream().toList()[i]
             inv.setItem(i, cosmetic.item)
         }

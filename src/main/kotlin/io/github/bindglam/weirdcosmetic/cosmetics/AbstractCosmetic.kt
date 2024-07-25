@@ -9,7 +9,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
-abstract class AbstractCosmetic(val itemID: String) {
+abstract class AbstractCosmetic(val className: String, val itemID: String) {
     val item: ItemStack = if(WeirdCosmetic.DEPEND_TYPE == DependType.ORAXEN){
         OraxenItems.getItemById(itemID).build()
     } else {
