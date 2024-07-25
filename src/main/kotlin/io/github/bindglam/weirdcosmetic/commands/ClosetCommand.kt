@@ -80,11 +80,11 @@ class ClosetCommand : CommandExecutor {
                     }
 
                     when(args[1]){
-                        "closetcamera" -> {
+                        "camera" -> {
                             ClosetManager.closetCameraLoc = player.eyeLocation
                             player.sendMessage("성공적으로 카메라 위치를 설정했습니다.")
                         }
-                        "closetmannequin" -> {
+                        "mannequin" -> {
                             ClosetManager.closetMannequinLoc = player.location
                             player.sendMessage("성공적으로 마네킹 위치를 설정했습니다.")
                         }
