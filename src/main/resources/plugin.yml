@@ -1,0 +1,13 @@
+name: WeirdCosmetic
+main: io.github.bindglam.weirdcosmetic.WeirdCosmetic
+version: 1.0
+api-version: 1.21
+softdepend:
+  - Oraxen
+  - ItemsAdder
+depend:
+  - MCKotlin-Paper
+  - ProtocolLib
+commands:
+  closet:
+    permission: op
