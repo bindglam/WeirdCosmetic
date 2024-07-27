@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "io.github.bindglam"
-version = "1.0-SNAPSHOT"
+version = "unspecified"
 
 repositories {
     mavenCentral()
@@ -13,6 +13,7 @@ repositories {
     maven("https://jitpack.io")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://repo.dmulloy2.net/repository/public/")
+    maven("https://repo.codemc.io/repository/maven-releases/")
     mavenLocal()
 }
 
@@ -25,6 +26,7 @@ dependencies {
     compileOnly("io.th0rgal:oraxen:1.178.0")
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14")
     compileOnly("me.clip:placeholderapi:2.11.6")
+    compileOnly("com.github.retrooper:packetevents-spigot:2.4.0")
 
     implementation(files("libs/ProtocolLib.jar"))
 }

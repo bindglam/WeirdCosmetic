@@ -55,8 +55,8 @@ class PlayerListener : Listener {
             cosmeticPlayer.isCloset = false
 
             val fadeEffectGlyph = when(WeirdCosmetic.DEPEND_TYPE){
-                DependType.ITEMSADDER -> TODO()
-                DependType.ORAXEN -> PlaceholderAPI.setPlaceholders(null, "%oraxen_fullscreen%")
+                DependType.ITEMSADDER -> PlaceholderAPI.setPlaceholders(null, WeirdCosmetic.INSTANCE.config.getString("screen-transition-glyph.itemsadder")!!)
+                DependType.ORAXEN -> PlaceholderAPI.setPlaceholders(null, WeirdCosmetic.INSTANCE.config.getString("screen-transition-glyph.oraxen")!!)
             }
             player.showTitle(Title.title(Component.text(fadeEffectGlyph).color(NamedTextColor.BLACK), Component.empty(),
                 Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(1), Duration.ofSeconds(1))))

@@ -3,6 +3,7 @@ package io.github.bindglam.weirdcosmetic;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.Pair;
+import com.github.retrooper.packetevents.protocol.player.Equipment;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,7 +24,7 @@ public class NPC {
 
     private float yaw, pitch;
 
-    private List<Pair<EnumWrappers.ItemSlot, ItemStack>> equipment = new ArrayList<>();
+    private List<Equipment> equipment = new ArrayList<>();
 
     public NPC(
             ProtocolManager protocolManager,
@@ -46,11 +47,11 @@ public class NPC {
         entityID = spawner.spawnEntity(player, location);
     }
 
-    public List<Pair<EnumWrappers.ItemSlot, ItemStack>> getEquipment(){
+    public List<Equipment> getEquipment(){
         return equipment;
     }
 
-    public void setEquipment(List<Pair<EnumWrappers.ItemSlot, ItemStack>> equipment){
+    public void setEquipment(List<Equipment> equipment){
         this.equipment = equipment;
         spawner.setEquipment(player, entityID, equipment);
     }

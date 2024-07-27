@@ -5,12 +5,15 @@ import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.events.PacketContainer
 import com.comphenix.protocol.wrappers.EnumWrappers
 import com.comphenix.protocol.wrappers.Pair
+import com.github.retrooper.packetevents.protocol.player.Equipment
+import com.github.retrooper.packetevents.protocol.player.EquipmentSlot
 import io.github.bindglam.weirdcosmetic.CosmeticManager
 import io.github.bindglam.weirdcosmetic.NPC
 import io.github.bindglam.weirdcosmetic.WeirdCosmetic
 import io.github.bindglam.weirdcosmetic.players.CosmeticPlayer
 import io.github.bindglam.weirdcosmetic.utils.DependType.ITEMSADDER
 import io.github.bindglam.weirdcosmetic.utils.DependType.ORAXEN
+import io.github.retrooper.packetevents.util.SpigotConversionUtil
 import me.clip.placeholderapi.PlaceholderAPI
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -36,8 +39,8 @@ class ClosetCommand : CommandExecutor {
             cosmeticPlayer.isCloset = true
 
             val fadeEffectGlyph = when(WeirdCosmetic.DEPEND_TYPE){
-                ITEMSADDER -> TODO()
-                ORAXEN -> PlaceholderAPI.setPlaceholders(null, "%oraxen_fullscreen%")
+                ITEMSADDER -> PlaceholderAPI.setPlaceholders(null, WeirdCosmetic.INSTANCE.config.getString("screen-transition-glyph.itemsadder")!!)
+                ORAXEN -> PlaceholderAPI.setPlaceholders(null, WeirdCosmetic.INSTANCE.config.getString("screen-transition-glyph.oraxen")!!)
             }
             player.showTitle(Title.title(Component.text(fadeEffectGlyph).color(NamedTextColor.BLACK), Component.empty(),
                 Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(1), Duration.ofSeconds(1))))
@@ -59,12 +62,13 @@ class ClosetCommand : CommandExecutor {
                 val npc = NPC(ProtocolLibrary.getProtocolManager(), UUID.randomUUID(), player.name)
                 npc.spawn(player, CosmeticManager.mannequinLoc)
                 npc.setEquipment(listOf(
-                    Pair(EnumWrappers.ItemSlot.MAINHAND, player.inventory.itemInMainHand),
-                    Pair(EnumWrappers.ItemSlot.OFFHAND, player.inventory.itemInOffHand),
-                    Pair(EnumWrappers.ItemSlot.HEAD, player.inventory.helmet ?: ItemStack(Material.AIR)),
-                    Pair(EnumWrappers.ItemSlot.CHEST, player.inventory.chestplate ?: ItemStack(Material.AIR)),
-                    Pair(EnumWrappers.ItemSlot.LEGS, player.inventory.leggings ?: ItemStack(Material.AIR)),
-                    Pair(EnumWrappers.ItemSlot.FEET, player.inventory.boots ?: ItemStack(Material.AIR)),
+                    Equipment(EquipmentSlot.HELMET, SpigotConversionUtil.fromBukkitItemStack(player.inventory.helmet ?: ItemStack(Material.AIR))),
+                    Equipment(EquipmentSlot.CHEST_PLATE, SpigotConversionUtil.fromBukkitItemStack(player.inventory.chestplate ?: ItemStack(Material.AIR))),
+                    Equipment(EquipmentSlot.BODY, SpigotConversionUtil.fromBukkitItemStack(player.inventory.chestplate ?: ItemStack(Material.AIR))),
+                    Equipment(EquipmentSlot.LEGGINGS, SpigotConversionUtil.fromBukkitItemStack(player.inventory.leggings ?: ItemStack(Material.AIR))),
+                    Equipment(EquipmentSlot.BOOTS, SpigotConversionUtil.fromBukkitItemStack(player.inventory.boots ?: ItemStack(Material.AIR))),
+                    Equipment(EquipmentSlot.MAIN_HAND, SpigotConversionUtil.fromBukkitItemStack(player.inventory.itemInMainHand)),
+                    Equipment(EquipmentSlot.OFF_HAND, SpigotConversionUtil.fromBukkitItemStack(player.inventory.itemInOffHand)),
                 ))
                 cosmeticPlayer.mannequin = npc
 
