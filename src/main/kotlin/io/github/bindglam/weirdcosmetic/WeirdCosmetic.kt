@@ -3,8 +3,10 @@ package io.github.bindglam.weirdcosmetic
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
 import io.github.bindglam.weirdcosmetic.commands.ClosetCommand
+import io.github.bindglam.weirdcosmetic.cosmetics.BackpackCosmetic
 import io.github.bindglam.weirdcosmetic.cosmetics.CosmeticLoader
 import io.github.bindglam.weirdcosmetic.cosmetics.HatCosmetic
+import io.github.bindglam.weirdcosmetic.listeners.InventoryListener
 import io.github.bindglam.weirdcosmetic.listeners.PlayerListener
 import io.github.bindglam.weirdcosmetic.listeners.ServerListener
 import io.github.bindglam.weirdcosmetic.utils.DependType
@@ -25,20 +27,22 @@ class WeirdCosmetic : JavaPlugin() {
         }
 
         getCommand("closet")?.setExecutor(ClosetCommand())
-
-        server.pluginManager.registerEvents(PlayerListener(), this)
+        
         server.pluginManager.registerEvents(ServerListener(), this)
+        server.pluginManager.registerEvents(PlayerListener(), this)
+        server.pluginManager.registerEvents(InventoryListener(), this)
 
-        CosmeticLoader.register(HatCosmetic::class.java)
+        CosmeticManager.register(HatCosmetic::class.java)
+        CosmeticManager.register(BackpackCosmetic::class.java)
 
-        ClosetManager.load()
+        CosmeticManager.load()
         CosmeticLoader.load()
 
         saveDefaultConfig()
     }
 
     override fun onDisable() {
-        ClosetManager.save()
+        CosmeticManager.save()
 
         saveConfig()
     }

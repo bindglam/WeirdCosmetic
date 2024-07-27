@@ -5,11 +5,9 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.Pair;
-import net.minecraft.network.protocol.game.PacketPlayOutEntity;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityHeadRotation;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityTeleport;
+import net.minecraft.network.protocol.game.*;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -64,6 +62,16 @@ public class EntitySpawn {
          */
         protocolManager.sendServerPacket(player, npc);
         return entityID;
+    }
+
+    public void addPassenger(Player player, int entityID, Entity entity){
+        PacketContainer attachPacket = protocolManager.createPacket(PacketType.Play.Server.ATTACH_ENTITY);
+        //PacketPlayOutAttachEntity
+
+        attachPacket.getIntegers().write(0, entityID)
+                .write(1, entity.getEntityId());
+
+        protocolManager.sendServerPacket(player, attachPacket);
     }
 
     public void setEquipment(Player player, int entityID, List<Pair<EnumWrappers.ItemSlot, ItemStack>> equipment){

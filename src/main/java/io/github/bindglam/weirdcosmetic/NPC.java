@@ -46,6 +46,10 @@ public class NPC {
         entityID = spawner.spawnEntity(player, location);
     }
 
+    public List<Pair<EnumWrappers.ItemSlot, ItemStack>> getEquipment(){
+        return equipment;
+    }
+
     public void setEquipment(List<Pair<EnumWrappers.ItemSlot, ItemStack>> equipment){
         this.equipment = equipment;
         spawner.setEquipment(player, entityID, equipment);

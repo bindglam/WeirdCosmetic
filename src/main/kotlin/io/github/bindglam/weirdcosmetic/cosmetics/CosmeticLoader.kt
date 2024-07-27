@@ -1,13 +1,13 @@
 package io.github.bindglam.weirdcosmetic.cosmetics
 
-import io.github.bindglam.weirdcosmetic.ClosetManager
+import io.github.bindglam.weirdcosmetic.CosmeticManager
 import io.github.bindglam.weirdcosmetic.WeirdCosmetic
+import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 
 object CosmeticLoader {
     private val cosmeticsFolder = File("plugins/WeirdCosmetic/cosmetics")
-    private val cosmeticClasses = ArrayList<Class<out AbstractCosmetic>>()
 
     fun load(){
         if(!cosmeticsFolder.exists())
@@ -16,32 +16,36 @@ object CosmeticLoader {
         for(configFile in cosmeticsFolder.listFiles()!!){
             val config = YamlConfiguration.loadConfiguration(configFile)
 
-            var itemID = ""
-            var className = ""
+            for(name in config.getKeys(false)){
+                val section = config.getConfigurationSection(name)!!
+                val keys = section.getKeys(true)
 
-            for(sectionName in config.getKeys(true)){
-                if(sectionName.split(".").size <= 1) continue
-                when(sectionName.split(".")[1]){
-                    "item_id" -> itemID = config.getString(sectionName)!!
-                    "class" -> className = config.getString(sectionName)!!
-                }
-            }
+                var itemID = ""
+                var clazz: Class<out AbstractCosmetic>? = null
 
-            var cosmetic: AbstractCosmetic? = null
-            for(clazz in cosmeticClasses){
-                if(clazz.simpleName == className){
-                    cosmetic = clazz.getDeclaredConstructor(String::class.java).newInstance(itemID)
+                for(key in keys){
+                    when(key){
+                        "item_id" -> itemID = section.getString(key)!!
+                        "class" -> clazz = CosmeticManager.cosmeticClasses[section.getString(key)!!]!!
+                    }
                 }
+
+                val cosmetic = clazz!!.getDeclaredConstructor(String::class.java, String::class.java).newInstance(name, itemID)
+
+                for(key in keys){
+                    when(key){
+                        "item_id", "class" -> continue
+                        else -> {
+                            cosmetic::class.java.getDeclaredField(key).apply {
+                                isAccessible = true
+                            }.set(cosmetic, section.get(key))
+                        }
+                    }
+                }
+
+                Bukkit.getPluginManager().registerEvents(cosmetic, WeirdCosmetic.INSTANCE)
+                CosmeticManager.cosmetics[name] = cosmetic
             }
-            if(cosmetic != null)
-                ClosetManager.cosmetics[itemID] = cosmetic
-            else
-                throw IllegalStateException("Cosmetic is not initalized!")
         }
-    }
-
-    fun register(cosmetic: Class<out AbstractCosmetic>){
-        WeirdCosmetic.INSTANCE.logger.info("${cosmetic.simpleName} is registered!")
-        cosmeticClasses.add(cosmetic)
     }
 }

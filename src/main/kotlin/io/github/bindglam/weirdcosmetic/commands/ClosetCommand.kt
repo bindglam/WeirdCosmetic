@@ -5,10 +5,10 @@ import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.events.PacketContainer
 import com.comphenix.protocol.wrappers.EnumWrappers
 import com.comphenix.protocol.wrappers.Pair
-import io.github.bindglam.weirdcosmetic.ClosetManager
-import io.github.bindglam.weirdcosmetic.players.ClosetPlayer
+import io.github.bindglam.weirdcosmetic.CosmeticManager
 import io.github.bindglam.weirdcosmetic.NPC
 import io.github.bindglam.weirdcosmetic.WeirdCosmetic
+import io.github.bindglam.weirdcosmetic.players.CosmeticPlayer
 import io.github.bindglam.weirdcosmetic.utils.DependType.ITEMSADDER
 import io.github.bindglam.weirdcosmetic.utils.DependType.ORAXEN
 import me.clip.placeholderapi.PlaceholderAPI
@@ -30,8 +30,11 @@ import java.util.*
 class ClosetCommand : CommandExecutor {
     override fun onCommand(player: CommandSender, cmd: Command, label: String, args: Array<out String>): Boolean {
         if(player !is Player || !cmd.label.equals("closet", true)) return false
+        val cosmeticPlayer = CosmeticManager.cosmeticPlayers[player.uniqueId]!!
 
-        if(args.isEmpty()){
+        if(args.isEmpty() && !cosmeticPlayer.isCloset){
+            cosmeticPlayer.isCloset = true
+
             val fadeEffectGlyph = when(WeirdCosmetic.DEPEND_TYPE){
                 ITEMSADDER -> TODO()
                 ORAXEN -> PlaceholderAPI.setPlaceholders(null, "%oraxen_fullscreen%")
@@ -40,9 +43,7 @@ class ClosetCommand : CommandExecutor {
                 Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(1), Duration.ofSeconds(1))))
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(WeirdCosmetic.INSTANCE, {
-                val closetPlayer = ClosetPlayer(player)
-
-                val cameraStand = ClosetManager.closetCameraLoc.world.spawn(ClosetManager.closetCameraLoc, ArmorStand::class.java)
+                val cameraStand = CosmeticManager.cameraLoc!!.world.spawn(CosmeticManager.cameraLoc!!, ArmorStand::class.java)
                 cameraStand.setGravity(false)
                 cameraStand.isMarker = true
                 cameraStand.isInvulnerable = true
@@ -53,10 +54,10 @@ class ClosetCommand : CommandExecutor {
                 WeirdCosmetic.PROTOCOL_MANAGER.sendServerPacket(player, spectatePacket)
                 player.teleportAsync(cameraStand.location.clone())
 
-                closetPlayer.cameraStand = cameraStand
+                cosmeticPlayer.closetCamera = cameraStand
 
                 val npc = NPC(ProtocolLibrary.getProtocolManager(), UUID.randomUUID(), player.name)
-                npc.spawn(player, ClosetManager.closetMannequinLoc)
+                npc.spawn(player, CosmeticManager.mannequinLoc)
                 npc.setEquipment(listOf(
                     Pair(EnumWrappers.ItemSlot.MAINHAND, player.inventory.itemInMainHand),
                     Pair(EnumWrappers.ItemSlot.OFFHAND, player.inventory.itemInOffHand),
@@ -65,9 +66,7 @@ class ClosetCommand : CommandExecutor {
                     Pair(EnumWrappers.ItemSlot.LEGS, player.inventory.leggings ?: ItemStack(Material.AIR)),
                     Pair(EnumWrappers.ItemSlot.FEET, player.inventory.boots ?: ItemStack(Material.AIR)),
                 ))
-                closetPlayer.mannequin = npc
-
-                ClosetManager.closets[player.uniqueId] = closetPlayer
+                cosmeticPlayer.mannequin = npc
 
                 player.gameMode = GameMode.SPECTATOR
             }, 20L)
@@ -81,11 +80,11 @@ class ClosetCommand : CommandExecutor {
 
                     when(args[1]){
                         "camera" -> {
-                            ClosetManager.closetCameraLoc = player.eyeLocation
+                            CosmeticManager.cameraLoc = player.eyeLocation
                             player.sendMessage("성공적으로 카메라 위치를 설정했습니다.")
                         }
                         "mannequin" -> {
-                            ClosetManager.closetMannequinLoc = player.location
+                            CosmeticManager.mannequinLoc = player.location
                             player.sendMessage("성공적으로 마네킹 위치를 설정했습니다.")
                         }
                     }
