@@ -1,19 +1,13 @@
 package io.github.bindglam.weirdcosmetic.commands
 
 import com.comphenix.protocol.PacketType
-import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.events.PacketContainer
-import com.comphenix.protocol.wrappers.EnumWrappers
-import com.comphenix.protocol.wrappers.Pair
-import com.github.retrooper.packetevents.protocol.player.Equipment
-import com.github.retrooper.packetevents.protocol.player.EquipmentSlot
+import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot
 import io.github.bindglam.weirdcosmetic.CosmeticManager
-import io.github.bindglam.weirdcosmetic.NPC
 import io.github.bindglam.weirdcosmetic.WeirdCosmetic
-import io.github.bindglam.weirdcosmetic.players.CosmeticPlayer
+import io.github.bindglam.weirdcosmetic.packet.NPC
 import io.github.bindglam.weirdcosmetic.utils.DependType.ITEMSADDER
 import io.github.bindglam.weirdcosmetic.utils.DependType.ORAXEN
-import io.github.retrooper.packetevents.util.SpigotConversionUtil
 import me.clip.placeholderapi.PlaceholderAPI
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -59,17 +53,18 @@ class ClosetCommand : CommandExecutor {
 
                 cosmeticPlayer.closetCamera = cameraStand
 
-                val npc = NPC(ProtocolLibrary.getProtocolManager(), UUID.randomUUID(), player.name)
+                val npc = NPC(WeirdCosmetic.PROTOCOL_MANAGER, UUID.randomUUID(), player.name)
                 npc.spawn(player, CosmeticManager.mannequinLoc)
-                npc.setEquipment(listOf(
-                    Equipment(EquipmentSlot.HELMET, SpigotConversionUtil.fromBukkitItemStack(player.inventory.helmet ?: ItemStack(Material.AIR))),
-                    Equipment(EquipmentSlot.CHEST_PLATE, SpigotConversionUtil.fromBukkitItemStack(player.inventory.chestplate ?: ItemStack(Material.AIR))),
-                    Equipment(EquipmentSlot.BODY, SpigotConversionUtil.fromBukkitItemStack(player.inventory.chestplate ?: ItemStack(Material.AIR))),
-                    Equipment(EquipmentSlot.LEGGINGS, SpigotConversionUtil.fromBukkitItemStack(player.inventory.leggings ?: ItemStack(Material.AIR))),
-                    Equipment(EquipmentSlot.BOOTS, SpigotConversionUtil.fromBukkitItemStack(player.inventory.boots ?: ItemStack(Material.AIR))),
-                    Equipment(EquipmentSlot.MAIN_HAND, SpigotConversionUtil.fromBukkitItemStack(player.inventory.itemInMainHand)),
-                    Equipment(EquipmentSlot.OFF_HAND, SpigotConversionUtil.fromBukkitItemStack(player.inventory.itemInOffHand)),
-                ))
+                npc.equipment = hashMapOf(
+                    ItemSlot.MAINHAND to player.equipment.itemInMainHand,
+                    ItemSlot.OFFHAND to player.equipment.itemInOffHand,
+                    ItemSlot.HEAD to (player.equipment.helmet ?: ItemStack.of(Material.AIR)),
+                    ItemSlot.CHEST to (player.equipment.chestplate ?: ItemStack.of(Material.AIR)),
+                    ItemSlot.BODY to (player.equipment.chestplate ?: ItemStack.of(Material.AIR)),
+                    ItemSlot.LEGS to (player.equipment.leggings ?: ItemStack.of(Material.AIR)),
+                    ItemSlot.FEET to (player.equipment.boots ?: ItemStack.of(Material.AIR)),
+                )
+
                 cosmeticPlayer.mannequin = npc
 
                 player.gameMode = GameMode.SPECTATOR

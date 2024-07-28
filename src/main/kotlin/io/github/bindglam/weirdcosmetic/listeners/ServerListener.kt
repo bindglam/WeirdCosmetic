@@ -10,8 +10,8 @@ class ServerListener : Listener {
     fun onTick(event: ServerTickStartEvent){
         for(cosmeticPlayer in CosmeticManager.cosmeticPlayers.values){
             if(cosmeticPlayer.isCloset && cosmeticPlayer.mannequin != null){
-                cosmeticPlayer.mannequin!!.spawner.updateRotation(cosmeticPlayer.player, cosmeticPlayer.mannequin!!.yaw, cosmeticPlayer.mannequin!!.pitch, cosmeticPlayer.mannequin!!.entityID)
-                cosmeticPlayer.mannequin!!.yaw += 1f
+                cosmeticPlayer.mannequin!!.spawner.updateRotation(cosmeticPlayer.player, cosmeticPlayer.mannequin!!.yaw, 0f, cosmeticPlayer.mannequin!!.entityID)
+                cosmeticPlayer.mannequin!!.yaw+=1f
             }
 
             for(cosmetic in cosmeticPlayer.cosmetics){

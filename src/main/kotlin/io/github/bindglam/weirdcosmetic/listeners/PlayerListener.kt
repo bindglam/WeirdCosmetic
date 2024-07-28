@@ -1,13 +1,8 @@
 package io.github.bindglam.weirdcosmetic.listeners
 
 import com.comphenix.protocol.PacketType
-import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.events.PacketContainer
-import com.comphenix.protocol.wrappers.EnumWrappers
-import com.comphenix.protocol.wrappers.Pair
-import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent
 import io.github.bindglam.weirdcosmetic.CosmeticManager
-import io.github.bindglam.weirdcosmetic.NPC
 import io.github.bindglam.weirdcosmetic.WeirdCosmetic
 import io.github.bindglam.weirdcosmetic.guis.ClosetGui
 import io.github.bindglam.weirdcosmetic.players.CosmeticPlayer
@@ -18,18 +13,13 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.title.Title
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
-import org.bukkit.Material
-import org.bukkit.entity.ArmorStand
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.player.PlayerToggleSneakEvent
-import org.bukkit.inventory.ItemStack
 import java.time.Duration
-import java.util.*
-import kotlin.math.cos
 
 class PlayerListener : Listener {
     @EventHandler
